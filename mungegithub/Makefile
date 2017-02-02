@@ -35,7 +35,8 @@ READONLY ?= true
 
 # just build the binary
 mungegithub build:
-	GOBIN=$(PWD) CGO_ENABLED=0 GOOS=linux go install -installsuffix cgo -ldflags '-w'
+	#GOBIN=$(PWD) CGO_ENABLED=0 GOOS=linux go install -installsuffix cgo -ldflags '-w'
+	CGO_ENABLED=0 GOOS=linux go build -ldflags '-w'
 
 test: mungegithub
 	# in case of error ignore all lines of 'getsockopt: connection refused' these are background go threads that don't matter
@@ -77,23 +78,23 @@ local_dryrun: container ensure_dirs
 # updates the deployment.yaml with current build information and sets it to --dry-run
 deployment:
 	# update the deployment.yaml with the current date and git hash
-	sed -e 's|[[:digit:]]\{4\}-[[:digit:]]\{2\}-[[:digit:]]\{2\}-[[:xdigit:]]\+|$(TAG)|g' $(APP)/deployment.yaml > $(APP)/local.deployment.yaml
+	gsed -e 's|[[:digit:]]\{4\}-[[:digit:]]\{2\}-[[:digit:]]\{2\}-[[:xdigit:]]\+|$(TAG)|g' $(APP)/deployment.yaml > $(APP)/local.deployment.yaml
 	# update the deployment.yaml with the current repo (if not gcr.io
-	sed -i -e 's|gcr.io/google_containers|$(REPO)|g' $(APP)/local.deployment.yaml
+	gsed -i -e 's|gcr.io/google_containers|$(REPO)|g' $(APP)/local.deployment.yaml
 ifeq ($(READONLY),false)
 	# update the deployment.yaml with --dry-run=false
-	sed -i -e 's!^\([[:space:]]\+\)- --dry-run=true!\1- --dry-run=false!g' $(APP)/local.deployment.yaml
+	gsed -i -e 's!^\([[:space:]]\+\)- --dry-run=true!\1- --dry-run=false!g' $(APP)/local.deployment.yaml
 endif
 	# update the deployment.yaml with label "readonly: true"
-	sed -i -e 's!^\([[:space:]]\+\)app: $(APP)!\1app: $(APP)\n\1readonly: "$(READONLY)"!g' $(APP)/local.deployment.yaml
+	gsed -i -e 's!^\([[:space:]]\+\)app: $(APP)!\1app: $(APP)\n\1readonly: "$(READONLY)"!g' $(APP)/local.deployment.yaml
 
 	# String-replacement of @@ by $(TARGET) in the deployment file.
-	sed -i -e 's!@@!$(TARGET)!g' $(APP)/local.deployment.yaml
+	gsed -i -e 's!@@!$(TARGET)!g' $(APP)/local.deployment.yaml
 
 # simple transformation of a github oauth secret file to a kubernetes secret
 secret:
 	@echo $(token64)
-	sed -e 's|1234567890123456789012345678901234567890123456789012345=|$(token64)|' $(APP)/deployment/$(TARGET)/secret.yaml > $(APP)/local.secret.yaml
+	gsed -e 's|1234567890123456789012345678901234567890123456789012345=|$(token64)|' $(APP)/deployment/$(TARGET)/secret.yaml > $(APP)/local.secret.yaml
 
 clean:
 	rm -f mungegithub $(APP)/local.deployment.yaml $(APP)/local.secret.yaml
