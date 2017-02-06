@@ -70,6 +70,7 @@ func (p *IssueCacher) RequiredFeatures() []string { return []string{} }
 
 // Initialize will initialize the munger
 func (p *IssueCacher) Initialize(config *github.Config, features *features.Features) error {
+	// TODO: this need to be changed
 	p.labelFilter = sets.NewString("kind/flake")
 	p.index = keyToIssueList{}
 	p.prevIndex = keyToIssueList{}
