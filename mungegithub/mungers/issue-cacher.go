@@ -59,6 +59,7 @@ type IssueCacher struct {
 }
 
 func init() {
+	glog.Infof("CHAO: IssueCacher init called!")
 	RegisterMungerOrDie(&IssueCacher{})
 }
 
@@ -70,6 +71,8 @@ func (p *IssueCacher) RequiredFeatures() []string { return []string{} }
 
 // Initialize will initialize the munger
 func (p *IssueCacher) Initialize(config *github.Config, features *features.Features) error {
+	// TODO: this need to be changed
+	glog.Infof("CHAO: IssueCacher Initialize called!")
 	p.labelFilter = sets.NewString("kind/flake")
 	p.index = keyToIssueList{}
 	p.prevIndex = keyToIssueList{}
@@ -79,14 +82,17 @@ func (p *IssueCacher) Initialize(config *github.Config, features *features.Featu
 
 // EachLoop is called at the start of every munge loop
 func (p *IssueCacher) EachLoop() error {
+	glog.Infof("CHAO: in IssueCacher's EachLoop")
 	func() {
 		p.lock.Lock()
 		defer p.lock.Unlock()
 		p.prevIndex = p.index
 		p.index = keyToIssueList{}
 		if !p.firstSyncStarted {
+			glog.Infof("CHAO: setting firstSyncStarted")
 			p.firstSyncStarted = true
 		} else if !p.firstSyncFinished {
+			glog.Infof("CHAO: setting firstSyncFinished")
 			p.firstSyncFinished = true
 		}
 	}()
