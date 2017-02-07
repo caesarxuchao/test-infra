@@ -30,6 +30,10 @@ import (
 	"k8s.io/test-infra/mungegithub/github"
 )
 
+const MaxLoops = 3
+
+var loops = 0
+
 // the relative path from golang workspace to repos
 const goWorkspaceStructure = "src/k8s.io"
 
@@ -255,6 +259,14 @@ func (p *PublisherMunger) EachLoop() error {
 	defer f.Close()
 	p.plog = NewPublisherLog(f)
 	var errlist []error
+	errlist = []error{fmt.Errorf("CHAO: dummy error1"), fmt.Errorf("CHAO: dummy error2")}
+	if loops < MaxLoops {
+		glog.Infof("CHAO: infof loop=%d", loops)
+		glog.Errorf("CHAO: errorf loop=%d", loops)
+		goto ISSUE
+	}
+	glog.Infof("CHAO: MaxLoops reached, skip")
+	return nil
 Repos:
 	for _, repoRules := range p.reposRules {
 		// clone the destination repo
@@ -315,6 +327,7 @@ Repos:
 		}
 	}
 
+ISSUE:
 	// create an issue or update an existing issue to report the failed
 	// publisher run
 	aggregated := errors.NewAggregate(errlist)
