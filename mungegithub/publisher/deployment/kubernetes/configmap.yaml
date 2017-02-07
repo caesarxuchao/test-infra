@@ -12,6 +12,6 @@ data:
 
   # munger specific options.
   gitrepo.repo-dir: /gitrepos
-  config.period: "24h"
+  config.period: "3m"
   publisher.netrc-dir: /netrc
   publisher.log-dir: /publisher_log
