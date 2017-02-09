@@ -110,10 +110,10 @@ func main() {
 			if err := mungers.RegisterMungers(config.PRMungersList); err != nil {
 				glog.Fatalf("unable to find requested mungers: %v", err)
 			}
-			requestedFeatures := mungers.RequestedFeatures()
-			if err := config.Features.Initialize(&config.Config, requestedFeatures); err != nil {
-				return err
-			}
+			//	requestedFeatures := mungers.RequestedFeatures()
+			//	if err := config.Features.Initialize(&config.Config, requestedFeatures); err != nil {
+			//		return err
+			//	}
 			if err := mungers.InitializeMungers(&config.Config, &config.Features); err != nil {
 				glog.Fatalf("unable to initialize mungers: %v", err)
 			}
