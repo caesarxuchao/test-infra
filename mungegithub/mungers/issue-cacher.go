@@ -59,7 +59,6 @@ type IssueCacher struct {
 }
 
 func init() {
-	glog.Infof("CHAO: IssueCacher init called!")
 	RegisterMungerOrDie(&IssueCacher{})
 }
 
