@@ -186,6 +186,7 @@ func (p *PublisherMunger) construct(src, dst coordinate) (string, error) {
 	if out, err := exec.Command("sh", "-c", fmt.Sprintf(`\
 find %s -depth -maxdepth 1 \( \
 -name examples -o \
+-name .travis.yml -o \
 -name .github -o \
 -name .git -o \
 -name README.md -o \
