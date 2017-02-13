@@ -239,6 +239,8 @@ func (p *PublisherMunger) publishClientGo(src, dst coordinate) error {
 
 	// publish the destination branch
 	cmd := exec.Command("/publish_scripts/clientgo_publish.sh", filepath.Join(dstRepoRoot, dst.dir), dst.branch, p.githubConfig.Token(), p.netrcDir, strings.TrimSpace(commitMessage), p.baseDir)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		p.plog.Errorf("Failed to publish %s.\nOutput: %s\nError: %s", dst, output, err)
@@ -297,6 +299,8 @@ Repos:
 			if len(repoRules.publishScript) != 0 {
 				// TODO: pass in the branches
 				cmd := exec.Command(repoRules.publishScript, p.githubConfig.Token(), p.netrcDir)
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
 				output, err := cmd.CombinedOutput()
 				if err != nil {
 					p.plog.Errorf("Failed to publish %s.\nOutput: %s\nError: %s", dst, output, err)
@@ -307,7 +311,7 @@ Repos:
 					}
 					continue
 				}
-				p.plog.Infof("Successfully publish %s: %s", dst, output)
+				p.plog.Infof("Successfully publish %s", dst)
 				continue
 			}
 

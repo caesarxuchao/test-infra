@@ -45,7 +45,9 @@ if git diff --cached --exit-code &>/dev/null; then
 fi
 git commit -m "${MESSAGE}"
 
+echo "running godep restore"
 godep restore
+echo "running godep save"
 godep save ./...
 git add --all
 if git diff --cached --exit-code &>/dev/null; then
