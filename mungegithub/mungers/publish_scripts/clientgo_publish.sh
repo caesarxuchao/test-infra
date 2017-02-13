@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2016 The Kubernetes Authors.
+# Copyright 2017 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,6 +53,9 @@ if git diff --cached --exit-code &>/dev/null; then
 else
     git commit -m "update dependency, should only contain changes in k8s.io/apimachinery"
 fi
+
+go build ./...
+go test ./...
 
 git push origin "${DST_BRANCH}"
 popd > /dev/null
