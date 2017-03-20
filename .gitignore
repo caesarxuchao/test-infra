@@ -6,4 +6,6 @@
 /bazel-*
 /_artifacts
 token
+chao-token
+real-token
 .DS_Store
